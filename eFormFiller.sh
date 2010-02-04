@@ -113,7 +113,14 @@ else
             #       login(text):
             #       passwd(password):
             #
-            curl -L "$url" | \
+            page=`curl -L "$url"`
+            if [[ -z "$page" ]]
+            then
+                wget -O "$keydir/tmp" "$url"
+                page=`cat "$keydir/tmp"`
+                rm "$keydir/tmp"
+            fi
+            echo "$page" | \
                 tr -d '\n' | \
                 sed 's/>/>\n/g' | \
                 sed -n 's/.*\(<input[^>]\+>\).*/\1/;/type="\(password\|text\)"/Ip' | \
