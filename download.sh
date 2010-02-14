@@ -14,7 +14,7 @@ test "x$url" = "x" && { echo "you must supply a url! ($url)"; exit 1; }
 
 cd "$dest"
 afile=`${GET} "${url}" 2>&1| sed 's/[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}[[:blank:]]\+[0-9:]\{8\}[[:blank:]]\+URL[^ ]\+ \[[0-9\/]\+\][[:blank:]]\+->[[:blank:]]\+"\([^"]\+\)".*$/\1/'`
-bfile="${cmd%%\?*}"
+bfile="${afile%%\?*}"
 if [[ "$afile" != "$bfile" ]]
 then
     if [[ -e "$bfile" ]]
