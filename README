@@ -4,16 +4,16 @@ download.sh
 
         set download_handler   = spawn @scripts_dir/download.sh
 
-    This script gets the name of a file from headers send by server
-    After download it notifies about finiszed download via notify-send (which
+    This script gets the name of a file from headers sent by server.
+    After download it notifies about finished download via notify-send (which
     uses libnotify).
 
-    In the script you ca set the $dest variable to directory where download
+    In the script you can set the $dest variable to directory where download
     script should save downloaded files.
 
 eFormFiller:
     Copy the eFormFiller.sh to $XDG_DATA_HOME/uzbl/scripts/
-    In the Uzbl config file add bindings(for example):
+    In the Uzbl config file add bindings (for example):
 
 
         set eFormFiller = spawn @scripts_dir/eFormFiller.sh
@@ -30,12 +30,12 @@ eFormFiller:
     overrite existing one.
 
     EDIT action will call an editor (configure it in the script) 
-    with curent domain profiles
+    with curent domain profiles.
 
     ADD action add another profile to current domain. Remember to name
-    the profiles, by default the have a name with random numbers
+    the profiles, by default the have a name with random numbers.
 
     LOAD will load formfields or if there is more then one profile, it will
-    call dmenu first to choose the profile you want to fill in the form
+    call dmenu first to choose the profile you want to fill in the form.
 
 Enjoy
