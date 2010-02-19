@@ -37,6 +37,13 @@ NB="#0f0f0f"
 NF="#4e7093" 
 SB="#003d7c" 
 SF="#3a9bff" 
+if [[ `dmenu -h 2>&1| grep lines` ]]
+then
+    LINES=" -l 3 "
+else
+    LINES=""
+fi
+echo ${LINES}
 PROMPT="Choose profile"
 
 keydir=${XDG_DATA_HOME:-$HOME/.local/share}/uzbl/dforms
@@ -75,8 +82,8 @@ action=$1
 
 if [ "$action" != 'edit' -a  "$action" != 'new' -a "$action" != 'load' -a "$action" != 'add' -a "$action" != 'once' ]
 then
-    action=new
-    [[ -e $keydir/$domain ]] && action=load
+    action="new"
+    [[ -e $keydir/$domain ]] && action="load"
 elif [ "$action" == 'edit' ] && [[ ! -e $keydir/$domain ]]
 then
     action=new
@@ -90,7 +97,7 @@ then
     then
         menu=`cat $keydir/$domain| \
               sed -n 's/^!profile=\([^[:blank:]]\+\)/\1/p'`
-        option=`echo -e -n "$menu"| dmenu -nb "${NB}" -nf "${NF}" -sb "${SB}" -sf "${SF}" -p "${PROMPT}"`
+        option=`echo -e -n "$menu"| dmenu ${LINES} -nb "${NB}" -nf "${NF}" -sb "${SB}" -sf "${SF}" -p "${PROMPT}"`
     fi
 
     cat $keydir/$domain | \
@@ -99,22 +106,25 @@ then
         sed -e 's/@/\\@/p' >> $fifo
 elif [ "$action" = "once" ]
 then
-    domain=${domain}"_tmp"
-    echo 'js document.documentElement.outerHTML' | \
-        socat - unix-connect:$socket | \
-        tr -d '\n' | \
-        sed 's/>/>\n/g' | \
+    tmpfile=`mktemp`
+    html=`echo 'js document.documentElement.outerHTML' | \
+            socat - unix-connect:$socket | \
+            tr -d '\n' | \
+            sed 's/>/>\n/g'`
+    echo "${html}" | \
         sed -n 's/.*\(<input[^>]\+>\).*/\1/;/type="\(password\|text\)"/Ip' | \
         sed 's/\(.*\)\(type="[^"]\+"\)\(.*\)\(name="[^"]\+"\)\(.*\)/\1\4\3\2\5/I' | \
-        sed 's/.*name="\([^"]\+\)".*type="\([^"]\+\)".*/\1(\2): /I' >> $keydir/$domain
-    ${editor} $keydir/$domain
+        sed 's/.*name="\([^"]\+\)".*type="\([^"]\+\)".*/\1(\2): /I' >> $tmpfile
+    echo "${html}" | \
+        sed -n '.*\(<textarea'
+    ${editor} $tmpfile
 
-    [[ -e $keydir/$domain ]] || exit 2
+    [[ -e $tmpfile ]] || exit 2
 
-    cat $keydir/$domain | \
+    cat $tmpfile | \
         sed -n -e 's/\([^(]\+\)([^)]\+):[ ]*\([^[:blank:]]\+\)/js document.getElementsByName("\1")[0].value="\2";/p' | \
         sed -e 's/@/\\@/p' >> $fifo
-    rm -f $keydir/$domain
+    rm -f $tmpfile
 else
     if [[ "$action" == 'new' || "$action" == 'add' ]]
     then
