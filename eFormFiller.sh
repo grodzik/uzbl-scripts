@@ -69,7 +69,7 @@ domain=$(echo $url | sed 's/\(http\|https\):\/\/\([^\/]\+\)\/.*/\2/')
 if [ "$action" != 'edit' -a  "$action" != 'new' -a "$action" != 'load' -a "$action" != 'add' -a "$action" != 'once' ]
 then
     action="new"
-    [ -e $keydir/$domain ] && action="load"
+    [ -e "$keydir/$domain" ] && action="load"
 elif [ "$action" == 'edit' ] && [ ! -e "$keydir/$domain" ]
 then
     action="new"
@@ -77,7 +77,7 @@ fi
 
 if [ "$action" = 'load' ]
 then
-    [ -e "$keydir/$domain" ] || exit 2
+    [ -e $keydir/$domain ] || exit 2
     if [ `cat $keydir/$domain|grep "!profile"|wc -l` -gt 1 ]
     then
         menu=`cat $keydir/$domain| \
