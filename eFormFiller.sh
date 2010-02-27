@@ -64,6 +64,8 @@ action=$1
 
 [ -d $keydir ] || mkdir $keydir || exit 1
 
+domain=$(echo $url | sed 's/\(http\|https\):\/\/\([^\/]\+\)\/.*/\2/')
+
 if [ "$action" != 'edit' -a  "$action" != 'new' -a "$action" != 'load' -a "$action" != 'add' -a "$action" != 'once' ]
 then
     action="new"
@@ -72,7 +74,6 @@ elif [ "$action" == 'edit' ] && [ ! -e $keydir/$domain ]
 then
     action="new"
 fi
-domain=$(echo $url | sed 's/\(http\|https\):\/\/\([^\/]\+\)\/.*/\2/')
 
 if [ "$action" = 'load' ]
 then
