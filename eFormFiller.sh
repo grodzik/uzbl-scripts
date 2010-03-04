@@ -101,7 +101,7 @@ then
         sed 's/\(.*\)\(type="[^"]\+"\)\(.*\)\(name="[^"]\+"\)\(.*\)/\1\4\3\2\5/I' | \
         sed 's/.*name="\([^"]\+\)".*type="\([^"]\+\)".*/\1(\2): /I' >> $tmpfile
     echo "${html}" | \
-        sed -n '.*\(<textarea'
+        sed -n 's/.*<textarea.*name="\([^"]\+\)".*/\1(textarea): /Ip' >> $tmpfile
     ${editor} $tmpfile
 
     [ -e $tmpfile ] || exit 2
