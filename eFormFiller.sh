@@ -21,12 +21,13 @@ NB="#0f0f0f"
 NF="#4e7093" 
 SB="#003d7c" 
 SF="#3a9bff" 
-if [ `dmenu -h 2>&1| grep lines` ]
+if [ "`dmenu --help 2>&1| grep lines`x" != "x" ]
 then
     LINES=" -l 3 "
 else
     LINES=""
 fi
+echo $LINES
 PROMPT="Choose profile"
 
 keydir=${XDG_DATA_HOME:-$HOME/.local/share}/uzbl/dforms
