@@ -21,12 +21,14 @@ NB="#0f0f0f"
 NF="#4e7093" 
 SB="#003d7c" 
 SF="#3a9bff" 
+
 if [ "`dmenu --help 2>&1| grep lines`x" != "x" ]
 then
     LINES=" -l 3 "
 else
     LINES=""
 fi
+
 PROMPT="Choose profile"
 
 keydir=${XDG_DATA_HOME:-$HOME/.local/share}/uzbl/dforms
@@ -43,7 +45,6 @@ if [ -z ${editor} ]; then
     fi
 fi
 
-echo $@
 config=$1; 
 shift
 pid=$1;    
@@ -59,7 +60,6 @@ shift
 title=$1;  
 shift
 action=$1
-
 
 [ -d $keydir ] || mkdir $keydir || exit 1
 
