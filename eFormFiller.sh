@@ -27,7 +27,6 @@ then
 else
     LINES=""
 fi
-echo $LINES
 PROMPT="Choose profile"
 
 keydir=${XDG_DATA_HOME:-$HOME/.local/share}/uzbl/dforms
